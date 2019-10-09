@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Movie Reviews (Kaggle)
-description: ''
 ---
 
 # Data exploration

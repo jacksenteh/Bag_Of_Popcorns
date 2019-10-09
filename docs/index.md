@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Movie Reviews (Kaggle)
-description: [Kaggle Link](https://www.kaggle.com/c/word2vec-nlp-tutorial/data)
+description: ''
 ---
 
 # Data exploration

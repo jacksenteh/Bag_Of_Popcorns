@@ -18,7 +18,7 @@ class Preprocess:
 
         return train_df
 
-    def verbose(self, df, columns=[]):
+    def check_na(self, df, columns=[]):
         title      = 'Missing Data Info'
         columns    = df.columns if len(columns) == 0 else columns
         nb_of_null = [[col, len(df[df[col].isna()]), df[col].dtype] for col in columns]

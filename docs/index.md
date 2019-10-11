@@ -76,7 +76,7 @@ train_df.review = train_df.review.str.lower()
 sym_removal = lambda review: re.sub(r'(\.{2,})|(\\{1,})|[\(\),¨\":-]' , ' ', review)
 tag_removal = lambda review: re.sub(r'<[^>]*>'   , '' , review)
 spc_removal = lambda review: re.sub(r'[\s]+'     , ' ', review)
-chr_removal = lambda review: re.sub(r'\'[a-z]\s' , ' ', review)
+chr_removal = lambda review: re.sub(r'\[a-z]\s' , ' ', review)
 
 # replace words or substrings which match the pattern
 train_df.review = train_df.review.apply(tag_removal)
@@ -99,12 +99,27 @@ stop_words_removal = lambda string: [w for w in word_tokenize(string) if w not i
 train_df.review    = train_df.review.apply(stop_words_removal)
 
 ```
+
  ### Output:
 Sample output of the processed review.
 ![text_processing](images/text_processing.png)
 
-Most common words in **positive** reviews
+Most frequent words in **positive** reviews
 ![good_wdcloud](images/good_wdcloud.png)
 
-Most common words **negative** reviews:
+Most frequent words in **negative** reviews:
 ![bad_wdcloud](images/bad_wdcloud.png)
+
+As you can see on the positive and negative word clouds, both of them shared a lot of common words.
+Furthermore, the high frequent words (i.e., the big word) appear in the word clouds does not provide significant insight between positive and negative reviews.
+Hence, I used TD-IDF vectorizer to find the most frequent and more interesting words (code could be found in [here](https://github.com/jacksenteh/Bag_Of_Popcorns/blob/master/Train.ipynb)).
+
+Most frequent + interesting words in **positive** reviews
+![good_wdcloud](images/good_wdcloud_1.png)
+
+Most frequent + interesting words in **negative** reviews:
+![bad_wdcloud](images/bad_wdcloud_1.png)
+
+By comparing two wordclouds, we can see that words such as might and quite appears to be more significant in negative than positive reviews.
+Recall that only the rating >= 7 in IMDB will be classified as 1, so these words demonstrate the user might be uncertain about this movie.
+Hence, the rating might be around 4~6 which is classified as 0.  

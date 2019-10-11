@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97759c6d-582a-43bb-a6e7-221477b48b19" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docs/_config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Train.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Train.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/bad_wdcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/bad_wdcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/good_wdcloud.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/good_wdcloud.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/text_processing.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/text_processing.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,7 +42,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="md" value="2881" />
+          <entry key="md" value="4422" />
           <entry key="py" value="33" />
           <entry key="yml" value="8" />
         </counts>
@@ -48,7 +50,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Bash" value="6" />
-          <entry key="Markdown" value="2875" />
+          <entry key="Markdown" value="4416" />
           <entry key="Python" value="33" />
           <entry key="YAML" value="8" />
         </counts>
@@ -57,19 +59,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docs/index.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="38">
-                <caret line="2" column="56" lean-forward="true" selection-start-line="2" selection-start-column="56" selection-end-line="2" selection-end-column="56" />
+              <first_editor relative-caret-position="478">
+                <caret line="123" column="114" lean-forward="true" selection-start-line="123" selection-start-column="87" selection-end-line="123" selection-end-column="114" />
               </first_editor>
               <second_editor />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/docs/_config.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state>
@@ -118,8 +120,8 @@
       <list>
         <option value="$PROJECT_DIR$/lib/data_preprocess.py" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/docs/index.md" />
         <option value="$PROJECT_DIR$/docs/_config.yml" />
+        <option value="$PROJECT_DIR$/docs/index.md" />
       </list>
     </option>
   </component>
@@ -200,7 +202,7 @@
     <frame x="0" y="23" width="1680" height="1027" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13675214" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.13675214" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -281,20 +283,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/index.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="38">
-            <caret line="2" column="56" lean-forward="true" selection-start-line="2" selection-start-column="56" selection-end-line="2" selection-end-column="56" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/_config.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="56" selection-start-column="56" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/index.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="478">
+            <caret line="123" column="114" lean-forward="true" selection-start-line="123" selection-start-column="87" selection-end-line="123" selection-end-column="114" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>

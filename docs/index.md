@@ -1,7 +1,6 @@
 ---
 layout: default
 title: Sentiment analysis on IMDB movie reviews (Kaggle)
-=======
 ---
 
 # Data exploration
@@ -77,7 +76,7 @@ train_df.review = train_df.review.str.lower()
 sym_removal = lambda review: re.sub(r'(\.{2,})|(\\{1,})|[\(\),¨\":-]' , ' ', review)
 tag_removal = lambda review: re.sub(r'<[^>]*>'   , '' , review)
 spc_removal = lambda review: re.sub(r'[\s]+'     , ' ', review)
-chr_removal = lambda review: re.sub(r'\'[a-z]\s' , ' ' , review)
+chr_removal = lambda review: re.sub(r'\'[a-z]\s' , ' ', review)
 
 # replace words or substrings which match the pattern
 train_df.review = train_df.review.apply(tag_removal)

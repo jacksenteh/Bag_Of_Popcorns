@@ -3,7 +3,7 @@ layout: default
 title: Sentiment analysis on IMDB movie reviews (Kaggle)
 ---
 
-# Data exploration
+# Data Wrangling
 The dataset consists of 50,000 IMDB movie reviews, specially selected for sentiment analysis and was 
 split into:
 * labeledTrainData.tsv
@@ -28,13 +28,32 @@ import matplotlib.pyplot as plt
 
 from pprint              import pprint
 from bokeh.io            import output_notebook, show
+from bokeh.models        import ColumnDataSource
+from bokeh.palettes      import Spectral6
 from bokeh.plotting      import figure
 from lib.data_preprocess import Preprocess
+from nltk.corpus         import stopwords 
+from nltk.tokenize       import word_tokenize
+from nltk.stem           import WordNetLemmatizer
+from bs4                 import BeautifulSoup
+from PIL                 import Image
+from wordcloud           import WordCloud, STOPWORDS, ImageColorGenerator
+from tqdm                import tqdm_notebook as tqdm
+from scipy               import stats
 
-# set the output format to jupyter notebook
+# plot setting
 output_notebook()
+sns.set_style('whitegrid')
+param = {'figure.figsize': (16, 8),
+         'axes.titlesize': 18,
+         'axes.labelsize': 16}
+plt.rcParams.update(param)
+
+# ntlk setting
 nltk.download('stopwords')
+nltk.download('wordnet')
 nltk.download('punkt')
+
 
 # define the dataset path
 train_path = 'dataset/labeledTrainData.tsv'
@@ -65,45 +84,35 @@ The next tasks is to process the text (i.e., review.) and check the data distrib
 To clean the reviews, we can take the following steps:
 * converting all letters to lower case.
 * remove excessive white spaces.
-* remove punctuation and weird symbols.
-* remove stop words (e.g., a, an, the, this).
+* remove non-words (e.g., punctuation and weird symbols).
+* remove html tags.
 
 ```bash
 # convert it to lower space
-train_df.review = train_df.review.str.lower()
+def text_process(df):
+    # convert it to lower space
+    df.review = df.review.str.lower()
 
-# pattern
-sym_removal = lambda review: re.sub(r'(\.{2,})|(\\{1,})|[\(\),¨\":-]' , ' ', review)
-tag_removal = lambda review: re.sub(r'<[^>]*>'   , '' , review)
-spc_removal = lambda review: re.sub(r'[\s]+'     , ' ', review)
-chr_removal = lambda review: re.sub(r'\[a-z]\s' , ' ', review)
+    # pattern
+    nw_removal  = lambda review: re.sub(r'[^A-Za-z\s]' , ' ', review)
+    spc_removal = lambda review: re.sub(r'[\s]+'      , ' ', review)
+    tag_removal = lambda review: BeautifulSoup(review, 'lxml').get_text()
 
-# replace words or substrings which match the pattern
-train_df.review = train_df.review.apply(tag_removal)
-train_df.review = train_df.review.apply(chr_removal)
-train_df.review = train_df.review.apply(sym_removal)
-train_df.review = train_df.review.apply(spc_removal)
+    # replace words or substrings which match the pattern
+    df.review = df.review.apply(tag_removal)
+    df.review = df.review.apply(nw_removal)
+    df.review = df.review.apply(spc_removal)
+    
+    return df
 
-# plotting wordcloud
-stop_words  = set(stopwords.words('english'))
-full_review = " ".join(r for r in train_df.review.values.copy())
-wordcloud   = WordCloud(stopwords=stop_words, background_color="white").generate(full_review)
 
-plt.figure(figsize=(16,8))
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis("off")
-plt.show()
-
-# tokenize and remove stop words
-stop_words_removal = lambda string: [w for w in word_tokenize(string) if w not in stop_words]
-train_df.review    = train_df.review.apply(stop_words_removal)
+# clean the review
+train_df = text_process(train_df)
+test_df  = text_process(test_df)
 
 ```
 
- ### Output:
-Sample output of the processed review.
-![text_processing](images/text_processing.png)
-
+#### Output:
 Most frequent words in **positive** reviews
 ![good_wdcloud](images/good_wdcloud.png)
 
@@ -122,4 +131,43 @@ Most frequent + interesting words in **negative** reviews:
 
 By comparing two wordclouds, we can see that words such as might and quite appears to be more significant in negative than positive reviews.
 Recall that only the rating >= 7 in IMDB will be classified as 1, so these words demonstrate the user might be uncertain about this movie.
-Hence, the rating might be around 4~6 which is classified as 0.  
+Hence, the rating might be around 4~6 which is classified as 0. 
+But this is just a speculation based on the current observation, as a data scientist we need to use statistical method to prove this.
+
+
+Up until now, the high number of features is too high and will leads to the curse of dimensionality. 
+Furthermore, it will also slowdown the learning process for a deep learning model (as the model requires more epochs to train and recognize all the words). 
+Hence, we can use another text normalization methods to reduce the number of features without losing the meaning/message of the reviews. 
+The techniques are:
+
+* **Stemming:** “The process of reducing inflection of words to their root forms such as mapping a group of words into a word stem even if the steam is not a valid word in language. “ 
+* **Lemmatization:** “The process of ensuring the root word belongs to the language”. For example, (run, ran, running) -> run.
+
+For more details about the stemming and lemmatization techniques, please visit this [tutorial](https://www.datacamp.com/community/tutorials/stemming-lemmatization-python).
+In short, the two techniques above are used for text mining (e.g., extracting high-quality information from text) applications.
+The applications include **text categorization, text clustering, concept/entity extraction, production of granular taxonomies, sentiment analysis, document summarization, and entity relation modeling (i.e., learning relations between named entities)**.
+ 
+In this project, we will use the lemmatization techniques to get the root word in proper english language.
+
+```bash
+def lemmatize(review):
+    lemmatization = WordNetLemmatizer()
+    stop_words    = set(stopwords.words('english'))
+    
+    # tokenize, lemmatize and stop words removal
+    tokens            = word_tokenize(review)
+    lemmatized_tokens = list(map(lambda x: lemmatization.lemmatize(x, pos='v'), tokens))
+    meaningful_tokens = list(filter(lambda x: not x in stop_words, lemmatized_tokens))
+    
+    return meaningful_tokens
+    
+train_df['review_tokenized'] = list(map(lemmatize, train_df.review.values.copy()))
+test_df['review_tokenized']  = list(map(lemmatize, test_df.review.values.copy()))
+
+```
+
+#### Output
+![word_dist](images/words_distribution.png)
+
+From the distribution plot above, we can see each review tends to have 50 to 100 words.
+The nex

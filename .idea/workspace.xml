@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97759c6d-582a-43bb-a6e7-221477b48b19" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Train.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Train.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/bad_wdcloud_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/bad_wdcloud_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/good_wdcloud_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/good_wdcloud_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/missing_val.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/missing_val.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,15 +42,15 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="md" value="5668" />
+          <entry key="md" value="10286" />
           <entry key="py" value="33" />
           <entry key="yml" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Bash" value="9" />
-          <entry key="Markdown" value="5659" />
+          <entry key="Bash" value="13" />
+          <entry key="Markdown" value="10273" />
           <entry key="Python" value="33" />
           <entry key="YAML" value="8" />
         </counts>
@@ -62,8 +63,8 @@
         <entry file="file://$PROJECT_DIR$/docs/index.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="550">
-                <caret line="171" column="92" selection-start-line="171" selection-start-column="92" selection-end-line="171" selection-end-column="92" />
+              <first_editor relative-caret-position="657">
+                <caret line="186" lean-forward="true" selection-start-line="186" selection-end-line="186" />
               </first_editor>
               <second_editor />
             </state>
@@ -264,8 +265,8 @@
     <entry file="file://$PROJECT_DIR$/docs/index.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="550">
-            <caret line="171" column="92" selection-start-line="171" selection-start-column="92" selection-end-line="171" selection-end-column="92" />
+          <first_editor relative-caret-position="657">
+            <caret line="186" lean-forward="true" selection-start-line="186" selection-end-line="186" />
           </first_editor>
           <second_editor />
         </state>

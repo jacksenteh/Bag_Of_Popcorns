@@ -80,7 +80,7 @@ Nice, both the train and test dataset is complete. However, the datatype of *id*
 Due to the lack of information, it is difficult for us to assess the validity of this column.
 But since the this column will not affect the model accuracy, we can just check the uniqueness and disregard it for now.
 
-The next tasks is to process the text (i.e., review.) and check the data distribution. 
+The next tasks is to process the reviews, text normalization and check the data distribution. 
 To clean the reviews, we can take the following steps:
 * converting all letters to lower case.
 * remove excessive white spaces.
@@ -112,40 +112,16 @@ test_df  = text_process(test_df)
 
 ```
 
-#### Output:
-Most frequent words in **positive** reviews
-![good_wdcloud](images/good_wdcloud.png)
-
-Most frequent words in **negative** reviews:
-![bad_wdcloud](images/bad_wdcloud.png)
-
-As you can see on the positive and negative word clouds, both of them shared a lot of common words.
-Furthermore, the high frequent words (i.e., the big word) appear in the word clouds does not provide significant insight between positive and negative reviews.
-Hence, I used TD-IDF vectorizer to find the most frequent and more interesting words (code could be found in [here](https://github.com/jacksenteh/Bag_Of_Popcorns/blob/master/Train.ipynb)).
-
-Most frequent + interesting words in **positive** reviews
-![good_wdcloud](images/good_wdcloud_1.png)
-
-Most frequent + interesting words in **negative** reviews:
-![bad_wdcloud](images/bad_wdcloud_1.png)
-
-By comparing two wordclouds, we can see that words such as might and quite appears to be more significant in negative than positive reviews.
-Recall that only the rating >= 7 in IMDB will be classified as 1, so these words demonstrate the user might be uncertain about this movie.
-Hence, the rating might be around 4~6 which is classified as 0. 
-But this is just a speculation based on the current observation, as a data scientist we need to use statistical method to prove this.
-
-
-Up until now, the high number of features is too high and will leads to the curse of dimensionality. 
-Furthermore, it will also slowdown the learning process for a deep learning model (as the model requires more epochs to train and recognize all the words). 
-Hence, we can use another text normalization methods to reduce the number of features without losing the meaning/message of the reviews. 
-The techniques are:
+After we clean the reviews, the next thing we can do is to convert each word back to it's root.
+This can greatly reduce the vocabulary size and help the models identify the root expression of each review.
+The techniques that used to find the root are called:
 
 * **Stemming:** “The process of reducing inflection of words to their root forms such as mapping a group of words into a word stem even if the steam is not a valid word in language. “ 
 * **Lemmatization:** “The process of ensuring the root word belongs to the language”. For example, (run, ran, running) -> run.
 
 For more details about the stemming and lemmatization techniques, please visit this [tutorial](https://www.datacamp.com/community/tutorials/stemming-lemmatization-python).
-In short, the two techniques above are used for text mining (e.g., extracting high-quality information from text) applications.
-The applications include **text categorization, text clustering, concept/entity extraction, production of granular taxonomies, sentiment analysis, document summarization, and entity relation modeling (i.e., learning relations between named entities)**.
+In short, the two techniques above are used for text mining (e.g., to extract high-quality information from text) applications.
+The applications include **text categorization, text clustering, concept/entity extraction, production of granular taxonomies, sentiment analysis, document summarization, and entity relation modeling**.
  
 In this project, we will use the lemmatization techniques to get the root word in proper english language.
 
@@ -166,8 +142,64 @@ test_df['review_tokenized']  = list(map(lemmatize, test_df.review.values.copy())
 
 ```
 
-#### Output
+#### Output:
+With all the text processing and normalization done, we can check the data distribution to gain som insights on the reviews.
+Here, I group the reviews into positive and negative group and utilize TF-IDF to locate the important words that represent each group
+(code could be found in [here](https://github.com/jacksenteh/Bag_Of_Popcorns/blob/master/Train.ipynb)).
+
+Most frequent + interesting words in **positive** reviews
+![good_wdcloud](images/good_wdcloud_1.png)
+
+Most frequent + interesting words in **negative** reviews:
+![bad_wdcloud](images/bad_wdcloud_1.png)
+
+***Please remember that the **size** of the word is equal to the **frequency** of the word.*** 
+
+If you look closely into the negative wordcloud, you might find that when words like 'terrible', 'stupid', 'dead' appears in the review, it usually is a negative review. 
+But this is just a speculation based on the current observation, as a data scientist we need to use statistical method to prove this.
+
+The next thing we can check is the distribution of word counts on each review.
 ![word_dist](images/words_distribution.png)
 
 From the distribution plot above, we can see each review tends to have 50 to 100 words.
-The nex
+Up until this point, we had successfully reduced the number of words in the overall reviews and managed to lemmatize words back to its original roots. 
+
+
+### Test output
+![bigram_phrases](images/bigram.png)
+
+## Word Embedding
+It is safe to said we had completed the basics of text normalization. 
+The next task to do is word embedding (e.g., converting word to vector space).
+In each reviews usually contains multiple phrases. For example, "big apple is a nickname for new york".
+When a human read this sentence, they can quickly identify two phrases within the sentence, 'big apple' and 'new york'.
+But to a machine learning model, it will not be able to recognize these easily. 
+Hence, we can use *Phrases* function from gensim library to identify the phrases.
+
+```bash
+from gensim.models import Word2Vec, Phrases
+
+bigrams  = Phrases(sentences=train_df.review_tokenized.values)
+trigrams = Phrases(sentences=bigrams[train_df.review_tokenized.values])
+
+```  
+After that we can convert each word into vectore by using *Word2Vec*.
+
+```bash
+%%time
+from gensim.models import Word2Vec
+
+
+embedded_size = 300
+embedding = Word2Vec(sentences=trigrams[bigrams[all_reviews]],
+                     size=embedded_size, window=5, min_count=3)
+
+print('Vocabulary size: {}'.format(len(embedding.wv.vocab)))
+```
+ 
+ 
+# Conclusion
+While working on this projects, I am struggling whether I should add in the test dataset while performing text normalization and word embedding.
+This is because I tried to stimulate an real world environment where you will be not be able to obtain the test dataset while training the model.
+After a long self-debate, I figured I can always extend my dataset with reviews from other websites, such as rottentomatoes and letterboxd, so it makes sense to treat the test dataset as additional dataset and include it. 
+If any readers do not agree with this rationale, feel free to exclude the test dataset (any suggestions are welcome).

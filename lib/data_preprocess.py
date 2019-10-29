@@ -124,7 +124,8 @@ class Preprocess:
         sns.heatmap(corr, mask=mask, annot=True, fmt='.2f', cmap='RdBu_r')
 
     @staticmethod
-    def train_valid_split(df, split=0.8):
+    def train_valid_split(df, split=0.8, seed=None):
+        if seed is not None: np.random.seed(seed)
         train_idx = np.random.rand(len(df)) < split
         train_df  = df[train_idx]
         valid_df  = df[~train_idx]

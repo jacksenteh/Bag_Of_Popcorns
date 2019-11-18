@@ -3,8 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="97759c6d-582a-43bb-a6e7-221477b48b19" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Train.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Train.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/missing_val.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/missing_val.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/images/words_distribution.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/images/words_distribution.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data_preprocess.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data_preprocess.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,19 +18,22 @@
     <session id="1209492108">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="7" />
+          <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.17" value="2" />
+          <entry key="project.open.time.19" value="1" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="4" />
+          <entry key="project.opened" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="html" value="4" />
           <entry key="md" value="5" />
-          <entry key="py" value="3" />
+          <entry key="py" value="6" />
           <entry key="yml" value="4" />
         </counts>
       </usages-collector>
@@ -36,22 +41,22 @@
         <counts>
           <entry key="HTML" value="4" />
           <entry key="Markdown" value="5" />
-          <entry key="Python" value="3" />
+          <entry key="Python" value="6" />
           <entry key="YAML" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="md" value="13033" />
-          <entry key="py" value="90" />
+          <entry key="md" value="18786" />
+          <entry key="py" value="336" />
           <entry key="yml" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Bash" value="17" />
-          <entry key="Markdown" value="13016" />
-          <entry key="Python" value="90" />
+          <entry key="Bash" value="30" />
+          <entry key="Markdown" value="18756" />
+          <entry key="Python" value="336" />
           <entry key="YAML" value="8" />
         </counts>
       </usages-collector>
@@ -63,10 +68,38 @@
         <entry file="file://$PROJECT_DIR$/docs/index.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="612">
-                <caret line="299" lean-forward="true" selection-start-line="299" selection-end-line="299" />
+              <first_editor relative-caret-position="310">
+                <caret line="352" column="21" lean-forward="true" selection-start-line="352" selection-start-column="21" selection-end-line="352" selection-end-column="21" />
               </first_editor>
               <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/evaluate.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="604">
+              <caret line="128" column="46" lean-forward="true" selection-start-line="128" selection-start-column="8" selection-end-line="128" selection-end-column="46" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#879#906#0" />
+                <element signature="e#978#1205#0" />
+                <element signature="e#1552#1809#0" />
+                <element signature="e#1910#2075#0" />
+                <element signature="e#2156#2832#0" />
+                <element signature="e#2902#3800#0" />
+                <element signature="e#3876#4091#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/data_preprocess.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2356">
+              <caret line="127" column="49" lean-forward="true" selection-start-line="127" selection-start-column="49" selection-end-line="127" selection-end-column="49" />
             </state>
           </provider>
         </entry>
@@ -87,6 +120,7 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/docs/_config.yml" />
         <option value="$PROJECT_DIR$/lib/data_preprocess.py" />
+        <option value="$PROJECT_DIR$/lib/evaluate.py" />
         <option value="$PROJECT_DIR$/docs/index.md" />
       </list>
     </option>
@@ -108,22 +142,6 @@
             <path>
               <item name="Bag_Of_Popcorn" type="b2602c69:ProjectViewProjectNode" />
               <item name="Bag_Of_Popcorn" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Bag_Of_Popcorn" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Bag_Of_Popcorn" type="462c0819:PsiDirectoryNode" />
-              <item name="dataset" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Bag_Of_Popcorn" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Bag_Of_Popcorn" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Bag_Of_Popcorn" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Bag_Of_Popcorn" type="462c0819:PsiDirectoryNode" />
-              <item name="docs" type="462c0819:PsiDirectoryNode" />
-              <item name="_layouts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Bag_Of_Popcorn" type="b2602c69:ProjectViewProjectNode" />
@@ -228,13 +246,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/data_preprocess.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="127" column="49" lean-forward="true" selection-start-line="127" selection-start-column="49" selection-end-line="127" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -252,11 +263,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/data_preprocess.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2356">
+          <caret line="127" column="49" lean-forward="true" selection-start-line="127" selection-start-column="49" selection-end-line="127" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/evaluate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="604">
+          <caret line="128" column="46" lean-forward="true" selection-start-line="128" selection-start-column="8" selection-end-line="128" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#879#906#0" />
+            <element signature="e#978#1205#0" />
+            <element signature="e#1552#1809#0" />
+            <element signature="e#1910#2075#0" />
+            <element signature="e#2156#2832#0" />
+            <element signature="e#2902#3800#0" />
+            <element signature="e#3876#4091#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/docs/index.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="612">
-            <caret line="299" lean-forward="true" selection-start-line="299" selection-end-line="299" />
+          <first_editor relative-caret-position="310">
+            <caret line="352" column="21" lean-forward="true" selection-start-line="352" selection-start-column="21" selection-end-line="352" selection-end-column="21" />
           </first_editor>
           <second_editor />
         </state>

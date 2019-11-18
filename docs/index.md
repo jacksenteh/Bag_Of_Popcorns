@@ -4,19 +4,19 @@ title: Sentiment analysis on IMDB movie reviews (Kaggle)
 ---
 
 # Introduction
-This is a  sentiment analysis task where the aim is to classify each review's sentiment by estimating the IMDB rating on each movie. 
-To make it clearer, the objective is to estimate the movie rating based on each review. 
-The review sentiment will be classified as 1 if the estimated rating is >= 7, otherwise 0.
+This is a  sentiment analysis project where the aim is to classify each review's sentiment by estimating the IMDB rating on each movie. 
+To make it clearer, you were tasked to develop a model which can analyze each word in each review and determine if the review has positive or negative sentiment.
+(Positive sentiment indicates the movie rating is >= 7, otherwise it will be a negative sentiment).
 
-In order to achieve this aim, the objectives are defined as follow:
+To achieve this aim, we can defined objectives as follow:
 * **Data Wrangling:** Clean the text (e.g. remove html tags, symbols, etc.), text normalization (e.g., lemmatization), stop word removal, etc.
 * **Word Embedding:** Convert each word to vector space.
 * **Model Development:** Develop and train a deep learning model to classify each review's sentiment.
-* **Optimization:** Check the deeo learning model performance and determine the optimization needed to improve the model performance.
+* **Optimization:** Check the model performance and determine the optimization needed to improve the classification accuracy.
 
 # Data Wrangling
-The dataset consists of 50,000 IMDB movie reviews, specially selected for sentiment analysis and was 
-split into:
+The dataset consist of 50,000 IMDB movie reviews, specially selected for sentiment analysis. 
+The dataset was split into:
 * labeledTrainData.tsv
 * testData.tsv
 * unlabeledTrainData.tsv (extra training set with no labels)
@@ -26,8 +26,10 @@ All three dataset have the following properties:
 * For each movie, there contain multiple reviews with no more than 30 reviews in total.
 * labeledTrain and testData contain 25,000 review each with labeled and unlabeled sentiments.
 
+***(I managed to find another similar dataset from kaggle to help improve the model performance, you can download the additional dataset [here](https://www.kaggle.com/utathya/imdb-review-dataset))***
+
 With that in mind, we can first assess the data quality to determine the level of data engineer required 
-(e.g., data wrangling, cleansing and preparation).
+(e.g., data cleaning and preparation).
 ```bash
 import re
 import nltk
@@ -65,18 +67,38 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('punkt')
 
+# %load_ext tensorboard
 
-# define the dataset path
-train_path = 'dataset/labeledTrainData.tsv'
-test_path  = 'dataset/testData.tsv'
+label_path   = 'gdrive/My Drive/dataset/IMDB/labeledTrainData.tsv'
+unlabel_path = 'gdrive/My Drive/dataset/IMDB/unlabeledTrainData.tsv'
+add_path     = 'gdrive/My Drive/dataset/IMDB/imdb_master.csv'
+test_path    = 'gdrive/My Drive/dataset/IMDB/testData.tsv'
 
 # read in the dataset
 pp                = Preprocess()
-train_df, test_df = pp.read_file(train_path, test_path, sep='\t')
+unlabel_df        = pd.read_csv(unlabel_path, error_bad_lines=False, delimiter='\t')
+add_df            = pd.read_csv(add_path, error_bad_lines=False, delimiter=',', encoding='latin_1')[['review', 'label']]
+train_df, test_df = pp.read_file(label_path, test_path, sep='\t')
+
+# rename the add_df's column name to match with IMDB dataset
+add_df.columns      = ['review','sentiment']
+add_df['sentiment'] = add_df['sentiment'].apply(lambda x: 0 if x == 'neg' else 1)
+
+# record the twitter and train dataframe size
+add_size   = add_df.shape[0]
+label_size = train_df.shape[0]
 
 # check for missing value
-print('Training set:')
+print('Train set:')
 pp.check_na(train_df)
+print()
+
+print('Unlabel data set:')
+pp.check_na(unlabel_df)
+print()
+
+print('Additional dataset:')
+pp.check_na(add_df)
 print()
 
 print('Test set:')
@@ -87,15 +109,18 @@ pp.check_na(test_df)
 #### Output:
 ![missing_val](images/missing_val.png)
 
-Nice, both the train and test dataset is complete. However, the datatype of *id* is an object rather than int. 
-Due to the lack of information, it is difficult for us to assess the validity of this column.
-But since the this column will not affect the model accuracy, we can just check the uniqueness and disregard it for now.
+The output above showed the dataset is complete which allows us to proceed to the next task. 
 
-The next tasks is to process the reviews, text normalization and check the data distribution. 
-To clean the reviews, we can take the following steps:
+### Text Cleaning and Normalization 
+If you check the *'review'* data in the dataset, you will notice that most of the reviews contain improper word such as html tags, excessive symbols, grammar mistake, etc.
+While these improper wording might not effect a human's judgement on sentimental classification, it will definitely affect the deep learning model on the later step.
+
+
+Thus, we need to clean and normalize the text to aid the model on understanding each words. 
+We'll start by cleaning the text:
 * converting all letters to lower case.
 * remove excessive white spaces.
-* remove non-words (e.g., punctuation and weird symbols).
+* remove non-words (e.g., punctuation and symbols).
 * remove html tags.
 
 ```bash
@@ -105,7 +130,7 @@ def text_process(df):
     df.review = df.review.str.lower()
 
     # pattern
-    nw_removal  = lambda review: re.sub(r'[^A-Za-z\s]' , ' ', review)
+    nw_removal  = lambda review: re.sub(r'[^A-Za-z\s]', ' ', review)
     spc_removal = lambda review: re.sub(r'[\s]+'      , ' ', review)
     tag_removal = lambda review: BeautifulSoup(review, 'lxml').get_text()
 
@@ -116,7 +141,6 @@ def text_process(df):
     
     return df
 
-
 # clean the review
 train_df = text_process(train_df)
 test_df  = text_process(test_df)
@@ -124,14 +148,14 @@ test_df  = text_process(test_df)
 ```
 
 After we clean the reviews, the next thing we can do is to convert each word back to it's root.
-This can greatly reduce the vocabulary size and help the models identify the root expression of each review.
+This can greatly reduce the vocabulary size and help the model identify the root expression of each review.
 The techniques that used to find the root are called:
 
 * **Stemming:** “The process of reducing inflection of words to their root forms such as mapping a group of words into a word stem even if the steam is not a valid word in language. “ 
 * **Lemmatization:** “The process of ensuring the root word belongs to the language”. For example, (run, ran, running) -> run.
 
 For more details about the stemming and lemmatization techniques, please visit this [tutorial](https://www.datacamp.com/community/tutorials/stemming-lemmatization-python).
-In short, the two techniques above are used for text mining (e.g., to extract high-quality information from text) applications.
+In short, the two techniques above are used for text mining (i.e., to extract high-quality information from text) applications.
 The applications include **text categorization, text clustering, concept/entity extraction, production of granular taxonomies, sentiment analysis, document summarization, and entity relation modeling**.
  
 In this project, we will use the lemmatization techniques to get the root word in proper english language.
@@ -154,21 +178,18 @@ test_df['review_tokenized']  = list(map(lemmatize, test_df.review.values.copy())
 ```
 
 #### Output:
-With all the text processing and normalization done, we can check the data distribution to gain som insights on the reviews.
+With all the text cleaning and normalization done, we can check the data distribution to gain som insights on the reviews.
 The first thing we can check is the distribution of word counts on each review. 
 ![word_dist](images/words_distribution.png)
 
 From the distribution plot above, we know the most of the reviews had around 120 words. 
-This is useful for the later process when we need to pad sequence to the same length.
+This is useful for the later process when we need to decide the length of pad sequence.
 
-## Word Embedding
-Up until this point, we had successfully cleaned most of the reviews and managed to lemmatize words back to it's original roots.
-It is safe to said we had completed the basic of text normalization. 
-Hence, we can move forward to word embedding task (e.g., converting word to vector space).
-In each reviews usually contains multiple phrases. For example, "big apple is a nickname for new york".
+Before we move on to the next step (i.e., word embedding), we can identify the phrases lies within each sentence.
+The phrases detection could help speed up the training process for the deep learning model. For example, "big apple is a nickname for new york".
 When a human read this sentence, they can quickly identify two phrases within the sentence, 'big apple' and 'new york'.
-But to a machine learning model, it will not be able to recognize these easily. 
-Hence, we can use *Phrases* function from gensim library to identify the phrases.
+But to a machine learning model, it might not be able to recognize these easily. 
+Hence, we can use *Phrases* function from gensim library to identify the phrases lies within each sentence.
 
 ```bash
 from gensim.models import Word2Vec, Phrases
@@ -181,23 +202,24 @@ trigrams = Phrases(sentences=bigrams[train_df.review_tokenized.values])
 ### Test output
 ![bigram_phrases](images/bigram.png)
 
-After that we can build our embedding matrix by using *Word2Vec*, convert the sentence to vector and set each vector to have same size. 
-The embedding matrix basically contain the vectors that represent each word.
+## Word Embedding
+With the text cleaning and normalization done, we can move forward to word embedding task (e.g., converting word to vector space).
+Here, we used the word embedding system introduced by Google to convert each word to vector.
 
 ```bash
-%%time
-from gensim.models import Word2Vec
+from gensim.models                import Word2Vec
+from sklearn.model_selection      import train_test_split
+from keras.preprocessing.sequence import pad_sequences
 
-embedded_size = 300
-embedding = Word2Vec(sentences=trigrams[bigrams[all_reviews]],
-                     size=embedded_size, window=5, min_count=3)
-
-print('Vocabulary size: {}'.format(len(embedding.wv.vocab)))
-
-train  , valid   = pp.train_valid_split(train_df[:25000], split=0.95, seed=0)
-train_x, valid_x = train.review_tokenized.values.copy(), valid.review_tokenized.values.copy()
-train_y, valid_y = train.sentiment.values.copy()       , valid.sentiment.values.copy()
-
+def word_embedding(sentences, embedded_size=220, load_path=None):
+    if load_path is not None:
+        return Word2Vec.load(load_path)
+    else:
+        return Word2Vec(sentences=sentences,
+                        size=embedded_size, 
+                        window=5, min_count=3, 
+                        workers=6, sg=1)
+                        
 def vectorized_sentence(reviews, vocab):
     print('Vectorizing words.....', end='\r')
     
@@ -209,21 +231,41 @@ def vectorized_sentence(reviews, vocab):
     print('Vectorizing words..... (done)')
     
     return vectorized
+    
+embedded_size = 220
+embedding     = word_embedding(trigrams[bigrams[all_reviews]], embedded_size)
 
+# split the dataset into train and validation set
+train_size = label_size + add_size
+train_data = train_df[:train_size]
 
+train_x, train_y = train_data['review_tokenized'].values.copy(), train_data['sentiment'].values.copy()
+train_x, valid_x, train_y, valid_y = train_test_split(train_x, train_y, test_size=0.05, shuffle=True, random_state=42)
+
+# vectorized the reviews
 vocab   = embedding.wv.vocab
 train_x = vectorized_sentence(trigrams[bigrams[train_x]], vocab)
 valid_x = vectorized_sentence(trigrams[bigrams[valid_x]], vocab)
 
-pad_length  = 150 
+# set the length for each review
+pad_length  = 180 
 train_pad_x = pad_sequences(sequences=train_x, maxlen=pad_length, padding='post')
 valid_pad_x = pad_sequences(sequences=valid_x, maxlen=pad_length, padding='post')
 
+# check the train and validation size
+print('='*30)
+print('Training Size  :', train_x.shape[0])
+print('Validation Size:', valid_x.shape[0])
+print('='*30)
+
 ```
+
+#### Output
+![train_val_size](images/train_val_size.png)
 
 # Model Development
 The model we can use for this problem is a RNN model, specifically the Bidirectional + LSTM (Long Short Term Memory).
-Developing the model is relatively straightforward with *keras*. 
+I'm going to show you the code for the model without explanation as it is relatively straightforward with *keras*. 
 ```bash
 import tensorflow as tf
 
@@ -269,19 +311,20 @@ class LossCallback(Callback):
         self.history.append(logs.get('loss'))
 
 net   = Bidirectional_LSTM(embedding.wv.vectors, pad_length)
-optim = Adam(lr=0.001)
-net.compile(loss='binary_crossentropy', optimizer=optim, metrics=['accuracy'])
+net.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 net.summary()
 ```
+
+#### Model Architecture
+![model_arch](images/model_arch.png)
 
 ### Training
 After the build the deep learning model, we can just set the training parameters (i.e., batch size and epochs) and start training.
 ```bash
-epochs       = 60
+%%time
+epochs       = 20
 batch_size   = 200
 log_dir      = '/content/sample_data/'
-tb_callbacks = TensorBoard(log_dir=log_dir + 'accuracy/')
-ls_callbacks = LossCallback()
 
 print('Training....', end='\r')
 
@@ -294,14 +337,35 @@ history = net.fit(x=train_pad_x,
                 callbacks=[tb_callbacks, ls_callbacks])
 
 print('Training.... (Done)')
-print('Average Loss:', np.average(ls_callbacks.history))
 ```
 
+#### Output
+![acc](images/acc.png)
 
- 
- 
-# Conclusion
-While working on this projects, I am struggling whether I should add in the test dataset while performing text normalization and word embedding.
-This is because I tried to stimulate an real world environment where you will be not be able to obtain the test dataset while training the model.
-After a long self-debate, I figured I can always extend my dataset with reviews from other websites, such as rottentomatoes and letterboxd, so it makes sense to treat the test dataset as additional dataset and include it. 
-If any readers do not agree with this rationale, feel free to exclude the test dataset (any suggestions are welcome).
+![loss_vs_acc](images/loss_vs_acc.png)
+
+The loss and accuracy graph indicates that the model converged at 20th epochs and further training will overfit the model.
+Let's check the classification accuracy on the test set by submitting it to Kaggle.
+The accuracy shown that the test accuracy is **97.268%**, which is within the top 10 rank on the public leader board.
+
+![leader_board](images/leader_board.png)
+
+### Model Improvement
+The default threshold for the estimated result is set to be 0.5 (i.e., probability which is larger than 0.5 will be set to be class 1).
+However, this might not be the optimal threshold. 
+
+By plotting the false postive rate vs true postive rate graph, we can determine which threshold value is the best for our model.
+![optim_threshold](images/optim_threshold.png)
+
+The graph above shows how each threshold perform on the training set and 
+the optimal value for the threshold lies on the point where the false postive rate is the lowest while true postive rate is the highest
+(i.e., the top left corner of the graph).
+
+Hence we can use the optimal threshold as our new threshold and re-evaluate our classification accuracy.
+
+![acc_optim](images/acc_optim.png)
+
+As you can see the classification accuracy on the validation set improved from 93.387% to 93.973%.
+It does not improve much, but we'll take it.
+Now let's use this threshold to regenerate our submission file and re-submit it to Kaggle and check the classification accuracy on the test set.
+The result came back with a **98.448%** accuracy which set our rank from 9th to 3rd on the public leader board.

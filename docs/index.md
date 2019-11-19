@@ -369,3 +369,7 @@ As you can see the classification accuracy on the validation set improved from 9
 It does not improve much, but we'll take it.
 Now let's use this threshold to regenerate our submission file and re-submit it to Kaggle and check the classification accuracy on the test set.
 The result came back with a **98.448%** accuracy which set our rank from 9th to 3rd on the public leader board.
+
+# Conclusion
+As always, feel free to send me a message if you got any questions and give me a star on my [github](https://github.com/jacksenteh/Bag_Of_Popcorns) if you like this blog.
+Thank you for reading this blog. 
